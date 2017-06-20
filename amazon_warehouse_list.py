@@ -7,7 +7,7 @@ import _thread
 ##import gevent 
 
 ## time waiting screen
-delay = 1
+delay = 2
 ##
 number_play = 60
 
