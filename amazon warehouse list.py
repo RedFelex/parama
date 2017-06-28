@@ -2,15 +2,17 @@ import requests
 from bs4 import BeautifulSoup
 import time
 import winsound
+import _thread
+##import gevent
 
 ## time waiting screen
-delay = 30
+delay = 5
 ##
 number_play = 60
 
-MaxPrice = 210
+MaxPrice = 220
 
-BASE_url = 'https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=rx+470&rh=i%3Aaps%2Ck%3Arx+470'
+BASE_url = 'https://www.amazon.com/gp/search/ref=sr_pg_1?fst=p90x%3A1&rh=n%3A10158976011%2Ck%3Aradeon+rx&bbn=10158976011&keywords=radeon+rx&ie=UTF8&qid=1497452276'
 
 ##List search card
 listName = ["470", "480", "570","580"]
@@ -19,29 +21,16 @@ max_pages = 1
 
 
 def get_html(url):
-##    try:
-##      try:
-##          response = requests.get(url, timeout=(10,10))
-##      except requests.exceptions.ReadTimeout:
-##          print('Oops. Read timeout occured')
-##      except requests.exceptions.ConnectTimeout:
-##          print('Oops. Connection timeout occured!')
-     
-      req = requests.get(url)
-      while req.status_code == 503:
-         time.sleep(5)   
-         req = requests.get(url)
-         print(".", end = '')
-
-##      print(req.status_code)
-      if req.status_code == 503:
-          return get_html(url)
-      elif req.status_code == 200:
-          return req.text
-      else:
-          return req
-####    except:
-####        return get_html(url)
+    try:
+        req = requests.get(url)
+        if req.status_code == 503:
+            return get_html(url)
+        elif req.status_code == 200:
+            return req.text
+        else:
+            return req
+    except:
+        return get_html(url)
 
 def get_page_count(html):
 ##    soup  = BeautifulSoup(html, "html.parser")
@@ -57,16 +46,14 @@ def parse(html):
     soup  = BeautifulSoup(html, "html.parser")
     elementsLi = soup.find_all('li',class_='s-result-item celwidget ')
 
-
     hrefs = []
-      
-    #print(elementsLi)
+ 
     for row in elementsLi:
 
         try:
-            
             #Name
             name_card = row.find('a', class_='a-link-normal s-access-detail-page s-color-twister-title-link a-text-normal').attrs['title']
+            
             if not validatingName(name_card):
                 continue
             
@@ -115,21 +102,25 @@ def validatingName(name_card):
 def get_one_item_page(url):
     card = []
 
-    page_count = max_pages if max_pages <= 3 else get_page_count(get_html(url))
+    page_count = max_pages if max_pages <= 2 else get_page_count(get_html(url))
     page_count = min(page_count,max_pages)
-
+    
     for page in range(1,page_count+1):
+        
         print('[%s]  Парсинг %d%%' % (time.asctime(), (page/page_count* 100)))
         new_url = url + '&page=%d' % page
-##        print(new_url)
         html = get_html(new_url)
-         
         card.extend(parse(html))
 
         if len(card):
             print_card(card)
-            play_sound(number_play)
-
+##            play_sound(number_play)
+            _thread.start_new_thread(play_sound,(number_play,))
+            time.sleep(15)
+            
+##    for i in range(5):
+##        time.sleep(3)
+##        print(i)
         
     return card   
      
@@ -154,12 +145,8 @@ def main():
     print()
 
     card = []
-    for it in listName:
-        time.sleep(3)     
-        url = BASE_url.replace('470',it)
-##        print(url)
-        print(it)
-        card.extend(get_one_item_page(url))
+    url = BASE_url
+    card.extend(get_one_item_page(url))
 
     print()
     print(time.asctime())
@@ -169,12 +156,13 @@ def main():
     if not len(card):
         time.sleep(delay)
         main()
-    else:    
+    else:
+        print("tut")
         print_card(card)
-        play_sound(number_play)
-        repeat = input("нажать 'r' или '+' чтобы повторить")
-        if repeat in 'r+':
-            main()
+##        play_sound(number_play)
+##        repeat = input("нажать 'r' или '+' чтобы повторить")
+##        if repeat in 'r+':
+##            main()
 
           
 
