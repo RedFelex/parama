@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import time
 import winsound
 import _thread
+import WorkWithFiles
 ##import gevent
 
 ## time waiting screen
@@ -130,12 +131,15 @@ def play_sound(number_play):
         winsound.PlaySound('sound.wav', winsound.SND_FILENAME)
         number_play -=1
 
+
+
 def print_card(card):
+        
     for element in card:
         print("~"*50)
         for value, name in element.items():
             print(name, sep = ' ')
-        
+    WorkWithFiles.write_results(card)    
 
 
 def main():
