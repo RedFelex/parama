@@ -6,14 +6,14 @@ debug = False
 
 
 #Parsing
-    delay = 30
-    number_play = 60
-    MinPrice = 100
-    MaxPrice = 245
-    BASE_url = 'https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=rx+470&rh=i%3Aaps%2Ck%3Arx+470'
-   
-    listName = ["470", "480", "570","580"]
-    max_pages = 4
+delay = 30
+number_play = 60
+MinPrice = 100
+MaxPrice = 245
+BASE_url = 'https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=rx+470&rh=i%3Aaps%2Ck%3Arx+470'
+
+listName = ["470", "480", "570","580"]
+max_pages = 4
 
 
 
@@ -49,3 +49,8 @@ file_name_List_proxy = 'Proxy_list.txt'
 file_name_results = 'results.txt'
 
 
+
+
+
+if __name__ == '__main__':
+    print('Settings')

@@ -19,12 +19,25 @@ def write_results(list_results, file_name = file_name_results):
                 line = str(key).upper() + ': ' + str(item)
                 file.write( line + '\n'*2)
         file.write('-'*50 + '\n'*2)
+        file.close()
 
 
 
 
 
+def ReplaceLineInFile(fileName, sourceText, replaceText):
+    file = open(fileName, 'r')                          #Opens the file in read-mode
+    text = file.read()                                  #Reads the file and assigns the value to a variable
+    file.close()                                        #Closes the file (read session)
+    file = open(fileName, 'w')                          #Opens the file again, this time in write-mode
+    file.write(text.replace(sourceText, replaceText))   #replaces all instances of our keyword
+                                                        # and writes the whole output when done, wiping over the old contents of the file
+    file.close()                                        #Closes the file (write session)
+    
 
+
+
+############################# TEST ############################################
 class Test_Files(unittest.TestCase):
 
 

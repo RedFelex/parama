@@ -2,36 +2,44 @@ import unittest
 import settings
 import random
 import os
+import WorkWithFiles
 from pathlib import Path
 
-
-
-debugs = False#True
-
-
+list_proxy = []
 
 def read_proxy_file():
-    list_proxy = []
-    if not settings.file_name_List_proxy:
-        return list_proxy
-    
-    with open(settings.file_name_List_proxy, "r") as f:
-        for line in f:
-            line = line.strip()
-            if not line or line.startswith("#") or not '.' in line:
-                continue  # skip blank and commented out lines
+    formatFile = False
 
-            if ':' in line and not '\t' in line:
-                split_str_Proxy = line.split(':')
-            else:    
-                split_str_Proxy = line.split('\t')
-        
-            list_proxy.append(
-                            {'protocol':'http',
-                             'proxy_ip': split_str_Proxy[0],
-                             'proxy_port': split_str_Proxy[1]
-                             })
-            
+    if not list_proxy:
+        formatFile = True
+    
+    file_name = settings.file_name_List_proxy
+    
+    if not file_name:
+        return list_proxy
+
+    with open(file_name, 'r') as file:
+        text = file.readlines()
+        with open(file_name,'w') as f:
+            for line in text:
+                line = line.strip()
+                if not line or line.startswith("#") or not '.' in line:
+                    continue  # skip blank and commented out lines
+
+                if ':' in line and not '\t' in line:
+                    split_str_Proxy = line.split(':')
+                else:    
+                    split_str_Proxy = line.split('\t')
+
+                if formatFile:
+                    f.write(split_str_Proxy[0]+'\t' + split_str_Proxy[1]+'\n')
+                
+                list_proxy.append(
+                                {'protocol':'http',
+                                 'proxy_ip': split_str_Proxy[0],
+                                 'proxy_port': split_str_Proxy[1]
+                                 })
+                
     return list_proxy
 
 
@@ -63,26 +71,52 @@ def get_proxy():
         "https": proxy_url
     }
 
+
+
+
+def clear_file_proxy():
+
+    file_name = settings.file_name_List_proxy
+    file_name_bad_proxy = 'bad_proxy.txt'
+
+    if not file_name:
+        return True
+    
+    with open(file_name, 'r') as file:
+        text = file.readlines()
+        with open(file_name,'w') as f:
+            for line in text:
+                if line == '\n':
+                    print(1)
+                elif not line.startswith("#"):
+                    line = str(line)
+                    f.write(line)
+                    
+        with open(file_name_bad_proxy, 'a') as bf:
+            for line in text:
+                if line.startswith("#"):
+                    line = str(line)
+                    bf.write(line)    
+
+ 
+
+
+
+
+
 def commented_proxy(proxy):
-##    print(proxy)
     if proxy:
-        proxy_ip = proxy.get('http').split(':')[1][2:]
-##    print('#',proxy_ip )
-        ReplaceLineInFile(settings.file_name_List_proxy,proxy_ip,'#'+proxy_ip)
+        #http:\\11.11.11.11: 2222
+        proxy_ip = proxy.get('http').split(':')[1][2:] #bad code
+        WorkWithFiles.ReplaceLineInFile(settings.file_name_List_proxy, proxy_ip,'#'+proxy_ip)
+        clear_file_proxy() 
     
 
 
-def ReplaceLineInFile(fileName, sourceText, replaceText):
-    file = open(fileName, 'r')                          #Opens the file in read-mode
-    text = file.read()                                  #Reads the file and assigns the value to a variable
-    file.close()                                        #Closes the file (read session)
-    file = open(fileName, 'w')                          #Opens the file again, this time in write-mode
-    file.write(text.replace(sourceText, replaceText))   #replaces all instances of our keyword
-                                                        # and writes the whole output when done, wiping over the old contents of the file
-    file.close()                                        #Closes the file (write session)
-    
 
 ##start_file = os.path.join(current_dir, "proxies.txt")
+
+
 
 
 
@@ -91,7 +125,7 @@ def ReplaceLineInFile(fileName, sourceText, replaceText):
 
 class Test_read_proxy_file(unittest.TestCase):
 
-
+   
     ## повинен бути файл з проксі
     def test_file_exist(self):
         if settings.file_name_List_proxy:
@@ -106,10 +140,11 @@ class Test_read_proxy_file(unittest.TestCase):
 
                 for line in f:
                     line = line.strip()
-                    if not line or line.startswith("#") or not '.' in line:
+                    if not line or line.startswith("#"):
                         continue  # skip blank and commented out lines
 
-                    with self.subTest(True):
+                    #with self.subTest(True):
+                    if True:
                         #має бути ip та порт
                         splitProxy = line.split('\t')
                         self.assertEqual(len(splitProxy),2)
@@ -134,5 +169,7 @@ class Test_read_proxy_file(unittest.TestCase):
 
 
 if __name__ == '__main__':
+    read_proxy_file()
     unittest.main()
+    
     
