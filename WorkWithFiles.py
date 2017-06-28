@@ -8,16 +8,17 @@ from pathlib import Path
 
 file_name_results = 'results.txt' #add loging daily
 
-def write_results(dict_results, file_name = file_name_results):
-    if len(dict_results):
+def write_results(list_results, file_name = file_name_results):
+    if len(list_results):
         file = open(file_name, 'w')
 
-        file.write(time.asctime() + '\n')
-        for key, item in dict_results.items():
+        file.write(time.asctime() + '\n'*2)
+        for dict_results in list_results: 
+            for key, item in dict_results.items():
 
-            line = key + ': ' + item
-            file.write( line + '\n')
-        file.write('-'*50 + '\n\n')
+                line = str(key).upper() + ': ' + str(item)
+                file.write( line + '\n'*2)
+        file.write('-'*50 + '\n'*2)
 
 
 
@@ -30,16 +31,18 @@ class Test_Files(unittest.TestCase):
     def test_write_results(self):
 
         file_name = 'test_write_rezults.txt'
+        test_list = []
         current_dict = {'a' : 'a1',
                         'b' : 'b1'}
-        write_results(current_dict,file_name)
+        test_list.append(current_dict)
+        write_results(test_list,file_name)
 
         #проверка на наличие файла
         f = Path(file_name)
         self.assertTrue(f.is_file())
         
         path = os.path.join(os.path.abspath(os.path.dirname(__file__)), file_name)
-##        os.remove(path)
+        os.remove(path)
         
         
         

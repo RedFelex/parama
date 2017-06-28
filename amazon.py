@@ -2,13 +2,14 @@ import requests
 from bs4 import BeautifulSoup
 import time
 import winsound
+import WorkWithFiles
 
 ## time waiting screen
 delay = 30
 ##
 number_play = 60
 
-MaxPrice = 210
+MaxPrice = 240
 
 BASE_url = 'https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=rx+470&rh=i%3Aaps%2Ck%3Arx+470'
 
@@ -140,11 +141,14 @@ def play_sound(number_play):
         number_play -=1
 
 def print_card(card):
+
+   
+      
     for element in card:
         print("~"*50)
         for value, name in element.items():
             print(name, sep = ' ')
-        
+    WorkWithFiles.write_results(card)     
 
 
 def main():
