@@ -13,14 +13,21 @@ def read_proxy_file():
     if not list_proxy:
         formatFile = True
     
-    file_name = settings.file_name_List_proxy
+    file_name    = settings.file_name_List_proxy
+    Path_Helpers = settings.Path_Helpers
+    File_path    = Path_Helpers+file_name
     
     if not file_name:
         return list_proxy
+    else:
+        
+        f = Path(File_path)
+        if not f.is_file():
+            open(File_path, "w+")
 
-    with open(file_name, 'r') as file:
+    with open(File_path, 'r') as file:
         text = file.readlines()
-        with open(file_name,'w') as f:
+        with open(File_path,'w') as f:
             for line in text:
                 line = line.strip()
                 if not line or line.startswith("#") or not '.' in line:
@@ -76,14 +83,17 @@ def get_proxy():
 
 def clear_file_proxy():
 
-    file_name = settings.file_name_List_proxy
+    file_name    = settings.file_name_List_proxy
+    Path_Helpers = settings.Path_Helpers
+    File_path    = Path_Helpers+file_name
+    
     file_name_bad_proxy = 'bad_proxy.txt'
 
     if not file_name:
         return True
-    with open(file_name, 'r') as file:
+    with open(File_path, 'r') as file:
         text = file.readlines()
-        with open(file_name,'w') as f:
+        with open(File_path,'w') as f:
             for line in text:
                 if line == '\n':
                     print(1)
@@ -107,7 +117,7 @@ def commented_proxy(proxy):
     if proxy:
         #http:\\11.11.11.11: 2222
         proxy_ip = proxy.get('http').split(':')[1][2:] #bad code
-        WorkWithFiles.ReplaceLineInFile(settings.file_name_List_proxy, proxy_ip,'#'+proxy_ip)
+        WorkWithFiles.ReplaceLineInFile(settings.Path_Helpers + settings.file_name_List_proxy, proxy_ip,'#'+proxy_ip)
         clear_file_proxy() 
     
 
@@ -117,13 +127,21 @@ def commented_proxy(proxy):
 
 
 def get_list_ignore_item():
-    file_name = settings.file_name_ignore
+    file_name    = settings.file_name_ignore
+    Path_Helpers = settings.Path_Helpers
+    File_path    = Path_Helpers+file_name
+
     list_ignore_Items = []
 
     if not file_name:
         return list_ignore_Items
-    
-    with open(file_name, 'r') as file:
+    else:
+        
+        f = Path(File_path)
+        if not f.is_file():
+            open(File_path, "w+")
+
+    with open(File_path, 'r') as file:
         text = file.readlines()
 
         for line in text:
@@ -148,7 +166,7 @@ class Test_read_proxy_file(unittest.TestCase):
     ## повинен бути файл з проксі
     def test_file_exist(self):
         if settings.file_name_List_proxy:
-            f = Path(settings.file_name_List_proxy)
+            f = Path(settings.Path_Helpers + settings.file_name_List_proxy)
             self.assertTrue(f.is_file())
 
 
@@ -188,7 +206,8 @@ class Test_read_proxy_file(unittest.TestCase):
 
 
 if __name__ == '__main__':
+    #unittest.main()
     read_proxy_file()
-    unittest.main()
+    get_list_ignore_item()
     
     
