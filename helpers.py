@@ -81,7 +81,6 @@ def clear_file_proxy():
 
     if not file_name:
         return True
-    
     with open(file_name, 'r') as file:
         text = file.readlines()
         with open(file_name,'w') as f:
@@ -117,6 +116,26 @@ def commented_proxy(proxy):
 ##start_file = os.path.join(current_dir, "proxies.txt")
 
 
+def get_list_ignore_item():
+    file_name = settings.file_name_ignore
+    list_ignore_Items = []
+
+    if not file_name:
+        return list_ignore_Items
+    
+    with open(file_name, 'r') as file:
+        text = file.readlines()
+
+        for line in text:
+            line = line.strip()
+            
+            if not line or line.startswith("#") or not '.' in line:
+                continue  # skip blank and commented out lines
+
+            list_ignore_Items.append(line)
+            
+    #print(list_ignore_Items)            
+    return list_ignore_Items
 
 
 
