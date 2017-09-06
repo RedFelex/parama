@@ -37,6 +37,14 @@ def ReplaceLineInFile(fileName, sourceText, replaceText):
 
 
 
+def ShowRusults():
+    cwd = os.getcwd()
+    path = cwd +"\\" + settings.file_name_results
+    os.startfile(path)
+
+    
+
+
 ############################# TEST ############################################
 class Test_Files(unittest.TestCase):
 
