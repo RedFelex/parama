@@ -195,7 +195,9 @@ class AmazonStorePrice:
             return req  
 
     def except_get_html(self): 
-        if settings.debug: print('except_get_html  ' ,self.proxies)
+        if settings.debug:
+            print('except_get_html  ' ,self.proxies)
+            
         helpers.commented_proxy(self.proxies)    
         importlib.reload(helpers)
 
@@ -206,7 +208,7 @@ class AmazonStorePrice:
         soup  = BeautifulSoup(html, "html.parser")
                
         elementsLi = soup.find_all('li',class_='s-result-item celwidget ')
-        print(len(elementsLi))
+        
         hrefs = []
         if settings.debug:
             print()
@@ -216,8 +218,9 @@ class AmazonStorePrice:
         if len(elementsLi) == 0:
             if settings.debug:
                 print('parse_html:~',self.proxies)
-                
-            helpers.commented_proxy(self.proxies)    
+
+            if not self.proxies is None:
+                helpers.commented_proxy(self.proxies)    
             
             if settings.debug:
                 print()
@@ -231,6 +234,7 @@ class AmazonStorePrice:
     
             return self.parse_html(self.get_html(self.new_url))                
         else:
+            print(len(elementsLi))
             for row in elementsLi:
     ##            try:
                     #Name
