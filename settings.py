@@ -3,10 +3,11 @@ import os
 current_dir = os.path.dirname(os.path.realpath(__file__))
 
 debug = False
+#debug = True
 
 
 #Parsing
-delay = 30
+delay = 40
 number_play = 60
 MinPrice = 100
 MaxPrice = 245
@@ -47,6 +48,7 @@ file_name_List_proxy = 'Proxy_list.txt'
 # Results
 
 file_name_results = 'results.txt'
+file_name_ignore = 'ignore_item.txt'
 
 
 
