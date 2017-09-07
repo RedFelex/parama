@@ -324,7 +324,8 @@ def main():
         if answer == '+':
             main()
         elif answer == 'i':
-            ignore = True #todo
+            for item in self.finding_card:
+                helpers.add_ignore_links(self.finding_card) #todo
             main()
   
 

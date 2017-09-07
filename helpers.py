@@ -164,6 +164,24 @@ def get_list_ignore_item():
 
 
 
+
+
+def add_ignore_links(list_results):
+    file_name    = settings.file_name_ignore
+    Path_Helpers = settings.Path_Helpers
+    File_path    = Path_Helpers+file_name
+  
+    file = open(File_path, 'a')
+    
+    for dict_results in list_results: 
+        for key, item in dict_results.items():
+            if key = 'href':
+                line = str(item)
+                file.write( line + '\n')
+    
+    file.close()
+
+
 ##########################   TESTS   ################################
 
 class Test_read_proxy_file(unittest.TestCase):
