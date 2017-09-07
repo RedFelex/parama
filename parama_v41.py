@@ -7,7 +7,7 @@ import importlib
 import settings
 import WorkWithFiles
 
-print('v2')
+print('v4')
 
 
 class AmazonStorePrice:
@@ -145,7 +145,7 @@ class AmazonStorePrice:
                 useProxy = not useProxy 
                 #print('Proxy none')
             if settings.debug:
-                print() 
+                print('useProxy:'  ,useProxy) 
                 print('Try proxy: ',self.proxies)
                 
             try:
@@ -193,6 +193,10 @@ class AmazonStorePrice:
         else:
             if settings.debug: print('req.status_code == else: ',req)  
             return req  
+
+
+
+
 
     def except_get_html(self): 
         if settings.debug:
@@ -316,10 +320,12 @@ def main():
         parser.print_status()
         WorkWithFiles.ShowRusults()
         parser.play_sound()
-        repeat = input("нажать 'r' или '+' чтобы повторить")
-        if repeat in 'r+':
-            main()   
-
+        answer = input("нажать '+' чтобы повторить, 'i' - чтобы игнорировать ссылку")
+        if answer == '+':
+            main()
+        elif answer == 'i':
+            ignore = True #todo
+            main()
   
 
 

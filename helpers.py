@@ -6,15 +6,13 @@ import WorkWithFiles
 from pathlib import Path
 
 list_proxy = []
+Path_Helpers = settings.Path_Helpers
+
+
 
 def read_proxy_file():
-    formatFile = False
-
-    if not list_proxy:
-        formatFile = True
-    
+        
     file_name    = settings.file_name_List_proxy
-    Path_Helpers = settings.Path_Helpers
     File_path    = Path_Helpers+file_name
     
     if not file_name:
@@ -23,30 +21,33 @@ def read_proxy_file():
         
         f = Path(File_path)
         if not f.is_file():
+            print('Add file proxy: ', File_path)    
             open(File_path, "w+")
 
     with open(File_path, 'r') as file:
         text = file.readlines()
+        
+
         with open(File_path,'w') as f:
             for line in text:
                 line = line.strip()
-                if not line or line.startswith("#") or not '.' in line:
+                if not line or not '.' in line: #or line.startswith("#") 
                     continue  # skip blank and commented out lines
 
                 if ':' in line and not '\t' in line:
                     split_str_Proxy = line.split(':')
                 else:    
                     split_str_Proxy = line.split('\t')
-
-                if formatFile:
-                    f.write(split_str_Proxy[0]+'\t' + split_str_Proxy[1]+'\n')
-                
+                              
+                f.write(split_str_Proxy[0]+'\t' + split_str_Proxy[1]+'\n')
+                if line.startswith("#"):
+                    continue
                 list_proxy.append(
                                 {'protocol':'http',
                                  'proxy_ip': split_str_Proxy[0],
                                  'proxy_port': split_str_Proxy[1]
                                  })
-                
+        
     return list_proxy
 
 
@@ -82,7 +83,8 @@ def get_proxy():
 
 
 def clear_file_proxy():
-
+    if settings.debug:
+        print('clear_file_proxy')
     file_name    = settings.file_name_List_proxy
     Path_Helpers = settings.Path_Helpers
     File_path    = Path_Helpers+file_name
@@ -101,7 +103,7 @@ def clear_file_proxy():
                     line = str(line)
                     f.write(line)
                     
-        with open(file_name_bad_proxy, 'a') as bf:
+        with open(Path_Helpers+file_name_bad_proxy, 'a') as bf:
             for line in text:
                 if line.startswith("#"):
                     line = str(line)
@@ -117,6 +119,10 @@ def commented_proxy(proxy):
     if proxy:
         #http:\\11.11.11.11: 2222
         proxy_ip = proxy.get('http').split(':')[1][2:] #bad code
+        if settings.debug:
+            print()
+            print('commented proxy: ',proxy_ip)
+            print()
         WorkWithFiles.ReplaceLineInFile(settings.Path_Helpers + settings.file_name_List_proxy, proxy_ip,'#'+proxy_ip)
         clear_file_proxy() 
     
@@ -206,7 +212,7 @@ class Test_read_proxy_file(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    #unittest.main()
+    unittest.main()
     read_proxy_file()
     get_list_ignore_item()
     
