@@ -29,24 +29,19 @@ def write_results(list_results, file_name = file_name_results):
 
 def ReplaceLineInFile(file_path, sourceText, replaceText):
     
-    file = open(file_path, 'r')
-    f = Path(file_path)
-    print(f.is_file())    #Opens the file in read-mode
-    text = file.read()
-    print('text1 = ', text) #Reads the file and assigns the value to a variable
+    file = open(file_path, 'r')                         #Opens the file in read-mode
+    text = file.read()                                  #Reads the file and assigns the value to a variable
     file.close()                                        #Closes the file (read session)
     file = open(file_path, 'w')
     if settings.debug:
-        print('text = ', text)
         print('sourceText %s replaceText %s',sourceText,replaceText)
-        text.replace(sourceText, replaceText)
-        print('text = ', text)                                                #Opens the file again, this time in write-mode
+                                                        #Opens the file again, this time in write-mode
     file.write(text.replace(sourceText, replaceText))   #replaces all instances of our keyword
                                                         # and writes the whole output when done, wiping over the old contents of the file
     file.close()                                        #Closes the file (write session)
     file = open(file_path, 'r')                         
     text = file.read()
-    print('text = ', text)
+   
     
 
 

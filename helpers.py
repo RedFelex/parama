@@ -175,7 +175,8 @@ def add_ignore_links(list_results):
     
     for dict_results in list_results: 
         for key, item in dict_results.items():
-            if key = 'href':
+           
+            if key == 'href':
                 line = str(item)
                 file.write( line + '\n')
     
