@@ -324,8 +324,8 @@ def main():
         if answer == '+':
             main()
         elif answer == 'i':
-            for item in self.finding_card:
-                helpers.add_ignore_links(self.finding_card) #todo
+            for item in parser.finding_card:
+                helpers.add_ignore_links(parser.finding_card) #todo
             main()
   
 
